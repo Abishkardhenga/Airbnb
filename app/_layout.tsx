@@ -5,6 +5,28 @@ import { useEffect } from "react"
 import { TouchableOpacity } from "react-native"
 import AntDesign from "@expo/vector-icons/AntDesign"
 import "react-native-reanimated"
+import * as SecureStore from "expo-secure-store"
+import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/clerk-expo"
+
+const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
+const tokenCache = {
+  async getToken(key: string) {
+    try {
+      const item = await SecureStore.getItemAsync(key)
+
+      return item
+    } catch (error) {
+      return null
+    }
+  },
+  async saveToken(key: string, value: string) {
+    try {
+      return SecureStore.setItemAsync(key, value)
+    } catch (err) {
+      return
+    }
+  },
+}
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -41,11 +63,27 @@ export default function RootLayout() {
     return null
   }
 
-  return <RootLayoutNav />
+  return (
+    <ClerkProvider
+      publishableKey={CLERK_PUBLISHABLE_KEY!}
+      tokenCache={tokenCache}
+    >
+      <ClerkLoaded>
+        <RootLayoutNav />
+      </ClerkLoaded>
+    </ClerkProvider>
+  )
 }
 
 function RootLayoutNav() {
   const router = useRouter()
+  const { isLoaded, isSignedIn } = useAuth()
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push("/(modals)/login")
+    }
+  }, [isLoaded])
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -71,7 +109,7 @@ function RootLayoutNav() {
         }}
       />
       <Stack.Screen
-        name="(modal)/booking"
+        name="(modals)/booking"
         options={{
           animation: "fade",
           presentation: "transparentModal",
