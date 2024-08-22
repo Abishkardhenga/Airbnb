@@ -6,7 +6,7 @@ const Idpage = () => {
   const { id } = useGlobalSearchParams<{ id: string }>()
   return (
     <View>
-      <Text>{id}</Text>
+      <Text style={{ color: "#000000" }}>Id:{id}</Text>
     </View>
   )
 }
