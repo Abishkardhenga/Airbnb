@@ -11,6 +11,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { defaulStyles } from "@/constants/Styles"
 import { Link } from "expo-router"
 import { ListingType } from "@/interfaces/listing.type"
+import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated"
 import { Ionicons } from "@expo/vector-icons"
 
 interface props {
@@ -30,7 +31,11 @@ const Listing = ({ listing: ListingItems, category }: props) => {
   const renderRow: ListRenderItem<ListingType> = ({ item }) => (
     <Link href={`/listing/${item.id}`} asChild>
       <TouchableOpacity>
-        <View style={styles.listing}>
+        <Animated.View
+          style={styles.listing}
+          entering={FadeInRight}
+          exiting={FadeOutLeft}
+        >
           <Image source={{ uri: item.medium_url! }} style={styles.image} />
           <TouchableOpacity
             style={{ position: "absolute", right: 30, top: 30 }}
@@ -51,11 +56,11 @@ const Listing = ({ listing: ListingItems, category }: props) => {
             </View>
           </View>
           <Text style={{ fontFamily: "mon-sb" }}>{item.room_type}</Text>
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", gap: 4 }}>
             <Text style={{ fontFamily: "mon-sb" }}>${item.price}</Text>
             <Text style={{ fontFamily: "mon" }}>night</Text>
           </View>
-        </View>
+        </Animated.View>
       </TouchableOpacity>
     </Link>
   )
