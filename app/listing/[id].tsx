@@ -1,72 +1,77 @@
+import { useLocalSearchParams, useNavigation } from "expo-router"
+import React, { useLayoutEffect } from "react"
 import {
-  Dimensions,
-  Image,
-  StyleSheet,
+  View,
   Text,
+  StyleSheet,
+  Image,
+  Dimensions,
   TouchableOpacity,
   Share,
-  View,
 } from "react-native"
-import React, { useLayoutEffect, useRef } from "react"
-import {
-  useGlobalSearchParams,
-  useLocalSearchParams,
-  useNavigation,
-} from "expo-router"
-import ListingData from "@/assets/data/airbnb-listings.json"
-import { ListingType } from "@/interfaces/listing.type"
+import listingsData from "@/assets/data/airbnb-listings.json"
+import { Ionicons } from "@expo/vector-icons"
+import Colors from "@/constants/Colors"
 import Animated, {
-  interpolate,
   SlideInDown,
+  interpolate,
   useAnimatedRef,
   useAnimatedStyle,
   useScrollViewOffset,
 } from "react-native-reanimated"
-import Colors from "@/constants/Colors"
-import { Ionicons } from "@expo/vector-icons"
 import { defaulStyles } from "@/constants/Styles"
 
-const IMG_HEIGHT = 300
 const { width } = Dimensions.get("window")
-const Idpage = () => {
-  const { id } = useLocalSearchParams<{ id: string }>()
-  const listing: ListingType = (ListingData as any[]).find(
-    (item) => item.id == id
-  )
-  console.log("url", listing.medium_url)
+const IMG_HEIGHT = 300
+
+const ListingDetailPage = () => {
+  const { id } = useLocalSearchParams()
+  const listing = (listingsData as any[]).find((item) => item.id === id)
+  const navigation = useNavigation()
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
 
-  const scrollOffset = useScrollViewOffset(scrollRef)
-  const navigation = useNavigation()
+  const shareListing = async () => {}
 
-  const shareListing = async () => {
-    try {
-      await Share.share({
-        title: listing.name,
-        url: listing.listing_url,
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  useLayoutEffect(() => {}, [])
-  const imageAnimateStyle = useAnimatedStyle(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({
+      headerTitle: "",
+      headerTransparent: true,
+
+      headerBackground: () => (
+        <Animated.View
+          style={[headerAnimatedStyle, styles.header]}
+        ></Animated.View>
+      ),
       headerRight: () => (
         <View style={styles.bar}>
           <TouchableOpacity style={styles.roundButton} onPress={shareListing}>
             <Ionicons name="share-outline" size={22} color={"#000"} />
           </TouchableOpacity>
+          <TouchableOpacity style={styles.roundButton}>
+            <Ionicons name="heart-outline" size={22} color={"#000"} />
+          </TouchableOpacity>
         </View>
       ),
+      headerLeft: () => (
+        <TouchableOpacity
+          style={styles.roundButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back" size={24} color={"#000"} />
+        </TouchableOpacity>
+      ),
     })
+  }, [])
+
+  const scrollOffset = useScrollViewOffset(scrollRef)
+
+  const imageAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
           translateY: interpolate(
             scrollOffset.value,
-            [-IMG_HEIGHT, 0, IMG_HEIGHT],
+            [-IMG_HEIGHT, 0, IMG_HEIGHT, IMG_HEIGHT],
             [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
           ),
         },
@@ -81,17 +86,25 @@ const Idpage = () => {
     }
   })
 
+  const headerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(scrollOffset.value, [0, IMG_HEIGHT / 1.5], [0, 1]),
+    }
+  }, [])
+
   return (
     <View style={styles.container}>
       <Animated.ScrollView
-        ref={scrollRef}
         contentContainerStyle={{ paddingBottom: 100 }}
+        ref={scrollRef}
         scrollEventThrottle={16}
       >
         <Animated.Image
-          source={{ uri: listing.xl_picture_url! }}
-          style={[styles.image, imageAnimateStyle]}
+          source={{ uri: listing.xl_picture_url }}
+          style={[styles.image, imageAnimatedStyle]}
+          resizeMode="cover"
         />
+
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{listing.name}</Text>
           <Text style={styles.location}>
@@ -104,16 +117,18 @@ const Idpage = () => {
           <View style={{ flexDirection: "row", gap: 4 }}>
             <Ionicons name="star" size={16} />
             <Text style={styles.ratings}>
-              {listing.review_scores_rating! / 20} · {listing.number_of_reviews}{" "}
+              {listing.review_scores_rating / 20} · {listing.number_of_reviews}{" "}
               reviews
             </Text>
           </View>
           <View style={styles.divider} />
+
           <View style={styles.hostView}>
             <Image
               source={{ uri: listing.host_picture_url }}
               style={styles.host}
             />
+
             <View>
               <Text style={{ fontWeight: "500", fontSize: 16 }}>
                 Hosted by {listing.host_name}
@@ -121,7 +136,9 @@ const Idpage = () => {
               <Text>Host since {listing.host_since}</Text>
             </View>
           </View>
+
           <View style={styles.divider} />
+
           <Text style={styles.description}>{listing.description}</Text>
         </View>
       </Animated.ScrollView>
@@ -138,9 +155,10 @@ const Idpage = () => {
           }}
         >
           <TouchableOpacity style={styles.footerText}>
-            <Text style={styles.footerPrice}>${listing.price}</Text>
+            <Text style={styles.footerPrice}>€{listing.price}</Text>
             <Text>night</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
             style={[defaulStyles.btn, { paddingRight: 20, paddingLeft: 20 }]}
           >
@@ -152,17 +170,14 @@ const Idpage = () => {
   )
 }
 
-export default Idpage
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
   },
-
   image: {
     height: IMG_HEIGHT,
-    width,
+    width: width,
   },
   infoContainer: {
     padding: 24,
@@ -243,3 +258,5 @@ const styles = StyleSheet.create({
     fontFamily: "mon",
   },
 })
+
+export default ListingDetailPage
