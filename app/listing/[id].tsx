@@ -4,15 +4,22 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Share,
   View,
 } from "react-native"
-import React, { useRef } from "react"
-import { useGlobalSearchParams, useLocalSearchParams } from "expo-router"
+import React, { useLayoutEffect, useRef } from "react"
+import {
+  useGlobalSearchParams,
+  useLocalSearchParams,
+  useNavigation,
+} from "expo-router"
 import ListingData from "@/assets/data/airbnb-listings.json"
 import { ListingType } from "@/interfaces/listing.type"
 import Animated, {
+  interpolate,
   SlideInDown,
   useAnimatedRef,
+  useAnimatedStyle,
   useScrollViewOffset,
 } from "react-native-reanimated"
 import Colors from "@/constants/Colors"
@@ -30,6 +37,50 @@ const Idpage = () => {
   const scrollRef = useAnimatedRef<Animated.ScrollView>()
 
   const scrollOffset = useScrollViewOffset(scrollRef)
+  const navigation = useNavigation()
+
+  const shareListing = async () => {
+    try {
+      await Share.share({
+        title: listing.name,
+        url: listing.listing_url,
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useLayoutEffect(() => {}, [])
+  const imageAnimateStyle = useAnimatedStyle(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={styles.bar}>
+          <TouchableOpacity style={styles.roundButton} onPress={shareListing}>
+            <Ionicons name="share-outline" size={22} color={"#000"} />
+          </TouchableOpacity>
+        </View>
+      ),
+    })
+    return {
+      transform: [
+        {
+          translateY: interpolate(
+            scrollOffset.value,
+            [-IMG_HEIGHT, 0, IMG_HEIGHT],
+            [-IMG_HEIGHT / 2, 0, IMG_HEIGHT * 0.75]
+          ),
+        },
+        {
+          scale: interpolate(
+            scrollOffset.value,
+            [-IMG_HEIGHT, 0, IMG_HEIGHT],
+            [2, 1, 1]
+          ),
+        },
+      ],
+    }
+  })
+
   return (
     <View style={styles.container}>
       <Animated.ScrollView
@@ -39,7 +90,7 @@ const Idpage = () => {
       >
         <Animated.Image
           source={{ uri: listing.xl_picture_url! }}
-          style={styles.image}
+          style={[styles.image, imageAnimateStyle]}
         />
         <View style={styles.infoContainer}>
           <Text style={styles.name}>{listing.name}</Text>
