@@ -6,6 +6,7 @@ export const defaulStyles = StyleSheet.create({
     container :{
         flex:1 , 
         backgroundColor:"#FDFFFF"
+      
     },
     inputField:{
         height:44 , 

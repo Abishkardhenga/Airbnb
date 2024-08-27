@@ -51,14 +51,15 @@ const ListingsMap = memo(({ listings }: Props) => {
         style={StyleSheet.absoluteFillObject}
         initialRegion={INITIAL_REGION}
         showsUserLocation
+        renderCluster={renderCluster}
+        clusterColor="#fff"
+        clusterTextColor="#000"
+        clusterFontFamily="mon-sb"
         showsMyLocationButton
       >
         {listings.features.map((item: ListingGeoType) => {
           const latitude = +item.properties.latitude
           const longitude = +item.properties.longitude
-
-          // Log to check coordinates
-          console.log("Latitude:", latitude, "Longitude:", longitude)
 
           return (
             <Marker
