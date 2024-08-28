@@ -1,18 +1,19 @@
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native"
 import { useMemo, useRef, useState } from "react"
 import BottomSheet from "@gorhom/bottom-sheet"
-import Listings from "./Listing"
 import { Ionicons } from "@expo/vector-icons"
 import Colors from "@/constants/Colors"
 import { ListingType } from "@/interfaces/listing.type"
+import Listings from "./Listing"
 
 interface Props {
   listings: ListingType[]
   category: string
 }
 
+// Bottom sheet that wraps our Listings component
 const ListingsBottomSheet = ({ listings, category }: Props) => {
-  const snapPoints = useMemo(() => ["80%", "10%"], [])
+  const snapPoints = useMemo(() => ["10%", "100%"], [])
   const bottomSheetRef = useRef<BottomSheet>(null)
   const [refresh, setRefresh] = useState<number>(0)
 
@@ -31,8 +32,7 @@ const ListingsBottomSheet = ({ listings, category }: Props) => {
       style={styles.sheetContainer}
     >
       <View style={styles.contentContainer}>
-        <Listings listing={listings} refresh={refresh} category={category} />
-
+        <Listings listings={listings} refresh={refresh} category={category} />
         <View style={styles.absoluteView}>
           <TouchableOpacity onPress={onShowMap} style={styles.btn}>
             <Text style={{ fontFamily: "mon-sb", color: "#fff" }}>Map</Text>

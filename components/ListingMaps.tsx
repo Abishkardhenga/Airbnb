@@ -5,6 +5,7 @@ import MapView from "react-native-map-clustering"
 import { useRouter } from "expo-router"
 import { defaulStyles } from "@/constants/Styles"
 import { ListingGeoType } from "@/interfaces/listingGeo.type"
+import { ListingType } from "@/interfaces/listing.type"
 
 interface Props {
   listings: any
