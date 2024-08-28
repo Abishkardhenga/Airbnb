@@ -11,9 +11,8 @@ interface Props {
   category: string
 }
 
-// Bottom sheet that wraps our Listings component
 const ListingsBottomSheet = ({ listings, category }: Props) => {
-  const snapPoints = useMemo(() => ["80%", "10%"], [])
+  const snapPoints = useMemo(() => ["90%", "10%"], [])
   const bottomSheetRef = useRef<BottomSheet>(null)
   const [refresh, setRefresh] = useState<number>(0)
 
@@ -33,6 +32,7 @@ const ListingsBottomSheet = ({ listings, category }: Props) => {
     >
       <View style={styles.contentContainer}>
         <Listings listing={listings} refresh={refresh} category={category} />
+
         <View style={styles.absoluteView}>
           <TouchableOpacity onPress={onShowMap} style={styles.btn}>
             <Text style={{ fontFamily: "mon-sb", color: "#fff" }}>Map</Text>
