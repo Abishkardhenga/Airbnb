@@ -12,7 +12,7 @@ interface Props {
 }
 
 const ListingsBottomSheet = ({ listings, category }: Props) => {
-  const snapPoints = useMemo(() => ["90%", "10%"], [])
+  const snapPoints = useMemo(() => ["80%", "10%"], [])
   const bottomSheetRef = useRef<BottomSheet>(null)
   const [refresh, setRefresh] = useState<number>(0)
 
@@ -24,7 +24,7 @@ const ListingsBottomSheet = ({ listings, category }: Props) => {
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      index={0}
+      index={1}
       snapPoints={snapPoints}
       enablePanDownToClose={false}
       handleIndicatorStyle={{ backgroundColor: Colors.grey }}

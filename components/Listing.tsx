@@ -16,6 +16,7 @@ import {
   BottomSheetFlatList,
   BottomSheetFlatListMethods,
 } from "@gorhom/bottom-sheet"
+import { FlatList, ScrollView } from "react-native-gesture-handler"
 
 interface props {
   listing: ListingType[]
@@ -88,7 +89,13 @@ const Listing = ({ listing, category, refresh }: props) => {
         data={loading ? [] : listing}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
-          return <Text> How are you </Text>
+          return (
+            <View style={{ backgroundColor: "red", height: 500, width: 500 }}>
+              <Text style={{ height: 40, backgroundColor: "pink" }}>
+                How are u
+              </Text>
+            </View>
+          )
         }}
         ListHeaderComponent={
           <View>
