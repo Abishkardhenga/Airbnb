@@ -7,6 +7,8 @@ import AntDesign from "@expo/vector-icons/AntDesign"
 import "react-native-reanimated"
 import * as SecureStore from "expo-secure-store"
 import { ClerkLoaded, ClerkProvider, useAuth } from "@clerk/clerk-expo"
+import ModelHeaderText from "@/components/ModelHeaderText"
+import Colors from "@/constants/Colors"
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY
 const tokenCache = {
@@ -114,8 +116,19 @@ function RootLayoutNav() {
         options={{
           animation: "fade",
           presentation: "transparentModal",
+          headerTransparent: true,
+          headerTitle: () => <ModelHeaderText />,
           headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity
+              style={{
+                borderColor: Colors.grey,
+                backgroundColor: "#fff",
+                borderRadius: 20,
+                borderWidth: 1,
+                padding: 4,
+              }}
+              onPress={() => router.back()}
+            >
               <AntDesign name="close" size={24} color="black" />
             </TouchableOpacity>
           ),
