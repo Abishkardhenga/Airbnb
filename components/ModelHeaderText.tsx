@@ -12,7 +12,7 @@ const ModelHeaderText = () => {
           style={{
             fontFamily: "mon-sb",
             fontSize: 18,
-            color: active === 0 ? "#fff" : Colors.grey,
+            color: active === 0 ? Colors.grey : Colors.dark,
             textDecorationLine: active === 0 ? "underline" : "none",
           }}
         >
@@ -24,7 +24,7 @@ const ModelHeaderText = () => {
           style={{
             fontFamily: "mon-sb",
             fontSize: 18,
-            color: active === 1 ? "#fff" : Colors.grey,
+            color: active === 1 ? Colors.grey : Colors.dark,
             textDecorationLine: active === 1 ? "underline" : "none",
           }}
         >

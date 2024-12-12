@@ -12,10 +12,10 @@ interface Props {
 }
 
 const INITIAL_REGION = {
-  latitude: 37.33,
-  longitude: -122,
-  latitudeDelta: 9,
-  longitudeDelta: 9,
+  latitude: 27.700769,
+  longitude: 83.448265, // Longitude for Butwal, Nepal
+  latitudeDelta: 0.15,
+  longitudeDelta: 0.05,
 }
 
 const ListingsMap = memo(({ listings }: Props) => {

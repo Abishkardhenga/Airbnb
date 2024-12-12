@@ -39,11 +39,6 @@ const guestsGropus = [
     text: "Under 2",
     count: 0,
   },
-  {
-    name: "Pets",
-    text: "Pets allowed",
-    count: 0,
-  },
 ]
 
 const Page = () => {
